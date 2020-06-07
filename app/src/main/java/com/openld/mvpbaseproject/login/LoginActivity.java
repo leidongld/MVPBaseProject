@@ -10,6 +10,12 @@ import android.widget.Toast;
 import com.openld.mvpbaseproject.R;
 import com.openld.mvpbaseproject.mvp.MVPBaseActivity;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * author: lllddd
  * created on: 2020/6/5 9:49
@@ -18,11 +24,14 @@ import com.openld.mvpbaseproject.mvp.MVPBaseActivity;
 public class LoginActivity extends MVPBaseActivity<LoginContract.View, LoginContract.Presenter> implements LoginContract.View {
     private static final String TAG = "LoginActivity";
 
-    private EditText mEdtUsername;
+    @BindView(R.id.edt_username)
+    EditText mEdtUsername;
 
-    private EditText mEdtPassword;
+    @BindView(R.id.edt_password)
+    EditText mEdtPassword;
 
-    private Button mBtnCommit;
+    @BindView(R.id.btn_commit)
+    Button mBtnCommit;
 
     @Override
     public LoginContract.Presenter bindPresenter() {
@@ -33,11 +42,7 @@ public class LoginActivity extends MVPBaseActivity<LoginContract.View, LoginCont
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-        mEdtUsername = findViewById(R.id.edt_username);
-        mEdtPassword = findViewById(R.id.edt_password);
-        mBtnCommit = findViewById(R.id.btn_commit);
-
+        ButterKnife.bind(this);
     }
 
     /**
@@ -93,5 +98,10 @@ public class LoginActivity extends MVPBaseActivity<LoginContract.View, LoginCont
     @Override
     public void showResult(String result) {
         Toast.makeText(this, result, Toast.LENGTH_SHORT).show();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventTest(Object o) {
+
     }
 }

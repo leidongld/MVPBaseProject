@@ -7,6 +7,10 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.greenrobot.eventbus.EventBus;
+
+import butterknife.ButterKnife;
+
 /**
  * author: lllddd
  * created on: 2020/6/5 9:21
@@ -38,8 +42,6 @@ public abstract class MVPBaseActivity<V extends IBaseView, T extends IBasePresen
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         mLogUtils.logDebug(TAG, "onCreate");
-//        ButterKnife.bind(this);
-        // EventBus
         super.onCreate(savedInstanceState);
         mPresenter = bindPresenter();
         if (mPresenter != null) {
@@ -55,6 +57,9 @@ public abstract class MVPBaseActivity<V extends IBaseView, T extends IBasePresen
     protected void onStart() {
         mLogUtils.logDebug(TAG, "onStart");
         super.onStart();
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
         if (mPresenter != null) {
             mPresenter.onStart();
             mLogUtils.logDebug(TAG, "onStart presenter");
@@ -107,6 +112,9 @@ public abstract class MVPBaseActivity<V extends IBaseView, T extends IBasePresen
     protected void onStop() {
         mLogUtils.logDebug(TAG, "onStop");
         super.onStop();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
         if (mPresenter != null) {
             mPresenter.onStop();
             mLogUtils.logDebug(TAG, "onStop presenter");
